@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <section class="list-section">
-      <h1>{{ msg }}</h1>
+      <h1>aaaaaaaaaaa</h1>
       <ul class="list-characters">
         <li v-for="info of infos" class="item"> 
           <div class="">
@@ -21,58 +21,28 @@
 </template>
 
 <script>
+
+  import Searchform from './Searchform.vue';
+
   export default {
     name: 'app',
     props: ['publicApiKey'],
     data () {
       return {
-        msg: 'Lista de personagens',
         infos: []
       }
     },
     methods: {
-      formatDescription: function (description) {
-        if(description == '') return description = "Descrição indisponível";
-        return description;
-      },
-      formatLastModifiedDate: function(date) {
-        let fullDate = date.split('T')[0],
-            fullDatePortuguese = fullDate.split('-').reverse().join().replace(/,/g, "/"),
-            fullHour = date.split('T')[1],
-            hour = fullHour.split('-')[0],
-            timezone = fullHour.split('-')[1];
 
-        return fullDatePortuguese + ' ' + hour;
-      }
+    },
+    components: {
+      Searchform
     },
     beforeCreate () {
 
     },
     mounted () { 
-      // search string
-      let s = {
-        prefix : 'https://gateway.marvel.com:443/v1/public/characters',
-        nameStartsWith : 'nameStartsWith=spi',
-        order  : 'orderBy=name',
-        limit  : 'limit=99'
-      }
-      this.axios
-        .get(s.prefix + '?' + s.nameStartsWith + '&' + s.order + '&' + s.limit + '&' + 'apikey='+publicApiKey)
-        .then(response => {
-          var itens = response.data.data.results;
-          for (var item of itens) {
-            this.infos.push({
-              name: item.name,
-              description: this.formatDescription(item.description),
-              resourceURI: item.resourceURI,
-              modified: this.formatLastModifiedDate(item.modified),
-              thumbnail: item.thumbnail.path + '.' + item.thumbnail.extension
-            });
-          }
-        })
-         .catch(error => {
-            console.log(error);
-        });
+
     }
   }
 </script>
