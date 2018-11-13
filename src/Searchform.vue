@@ -10,6 +10,12 @@
         >
       <input type="submit" class="search-submit" value="Pesquisar">
     </div>
+    <div class="input-group-result">
+      <table>
+        <tbody v-html="this.templates">
+        </tbody>
+      </table>
+    </div>
       
   </form>
 </template>
@@ -19,7 +25,8 @@
     name: 'Searchform',
     data () {
       return {
-        infos: []
+        infos: [],
+        templates: ''
       }
     },
     methods: {
@@ -42,10 +49,7 @@
       },
       doSearch: function(e) {
         let searchValue = this.changeValue(e);
-        //console.log('1');
         if (searchValue.length < 3) return;
-        //console.log(searchValue);
-        //console.log('2');
 
         // search string
         let s = {
@@ -57,18 +61,28 @@
         this.axios
           .get(s.prefix + '?' + s.nameStartsWith + '&' + s.order + '&' + s.limit + '&' + 'apikey='+publicApiKey)
           .then(response => {
-            var itens = response.data.data.results;
             this.infos = [];
+            this.templates = '';
+            var itens = response.data.data.results;
             for (var item of itens) {
               this.infos.push({
                 name: item.name,
                 description: this.formatDescription(item.description),
                 resourceURI: item.resourceURI,
                 modified: this.formatLastModifiedDate(item.modified),
-                thumbnail: item.thumbnail.path + '.' + item.thumbnail.extension
+                thumbnail: item.thumbnail.path + '.' + item.thumbnail.extension,
+                template: `
+                          <tr>
+                            <td>
+                              <img src="${item.thumbnail.path}.${item.thumbnail.extension}">
+                            </td>
+                            <td>${item.name}</td>
+                          </tr>`
               });
             }
-            console.log(this.infos);
+            for (var html of this.infos) {
+              this.templates += html.template;
+            }
           })
         .catch(error => {
           console.log(error);
@@ -85,7 +99,7 @@
 
   #main-header {
 
-    .banner {
+
    
       .form {
         bottom: 0;
@@ -141,8 +155,17 @@
           background-size: 100%;
           opacity: 1;
         }
+
+        .input-group-result {
+
+          img {
+            border-radius: 100em; 
+            height:40px; 
+            width:40px;
+          }
+        }
       }
 
-    }
+    
   }
 </style>
