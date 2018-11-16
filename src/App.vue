@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <section class="list-section">
-      <h1>aaaaaaaaaaa</h1>
+      <h1>Detalhes do personagem</h1>
       <ul class="list-characters">
         <li v-for="info of infos" class="item"> 
           <div class="">
@@ -41,8 +41,7 @@
     beforeCreate () {
 
     },
-    mounted () { 
-        console.log(Searchform);
+    mounted () {
     }
   }
 </script>

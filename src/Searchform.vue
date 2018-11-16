@@ -5,13 +5,13 @@
       <input 
         type="text"   
         class="search-input"
-        placeholder="Procure pelo nome de um héroi ou heroína"
+        placeholder="Procure pelo nome de um herói ou heroína"
         v-on:keyup="changeValue"
         v-on:blur="showSearchRecomendations = false"
         >
       <input 
         type="button" 
-        class="search-submit" 
+        class="search-submit icon-lupa" 
         value="Pesquisar"
         v-on:click="changeValue"
         v-on:blur="showSearchRecomendations = false"
@@ -21,7 +21,7 @@
       <table>
         <thead>
           <tr>
-            <th colspan="2">Pesquisar relacionadas:</th>
+            <th colspan="2">Pesquisas relacionadas:</th>
           </tr>
         </thead>
         <tbody v-html="this.templates">
@@ -65,13 +65,15 @@
         this.doSearch();
       },
       doSearch: function() {
+
+        // ao inves de dar return,
+        // informar usuário para escrever no min 3 caracteres
         if (this.searchWords.length < 3) return;
 
-        // adicionar loader,
-        // substituindo o icone de lupa por uma rodinha
-        // desabilitando o click para outra busca
+        let searchIcon = document.querySelector('.search-submit'); 
+        searchIcon.classList.remove('icon-lupa');
+        searchIcon.classList.add('icon-loader');
 
-        // search string
         let s = {
           prefix : 'https://gateway.marvel.com:443/v1/public/characters',
           nameStartsWith : 'nameStartsWith='+this.searchWords,
@@ -84,6 +86,12 @@
             this.infos = [];
             this.templates = '';
             var itens = response.data.data.results;
+
+
+            // se itens.length == 0
+            // pula o loop e exibe mensagem: "Nenhum resultado encontrado. Por favor, tente novamente."
+
+
             for (var item of itens) {
               this.infos.push({
                 name: item.name,
@@ -105,21 +113,29 @@
             }
             this.showSearchRecomendations = true;
 
-            // remover loader,
-            // substituindo o icone de rodinha pela lupa
-            // habilitando o click para outra busca
+
+            // adicionar evento on click
+            // em todos os itens da tabela
+            // para pegar os detalhes do personagem,
+            // fechar a busca,
+            // escrever em 'list-characters' em app.vue
+
 
           })
         .catch(error => {
-          console.log(error);
-
-          // tratar erros com mensagem em tela
-          // notificando usuario de possíveis problemas
-
+          this.templates = `
+            <tr>
+              <td colspan="2" class="search-error">
+                <strong>😰 Oops! Ocorreu um erro:</strong><br/> ${error}
+              </td>
+              <td></td>
+            </tr>`;
+          this.showSearchRecomendations = true;
+        }).then(function () {
+          searchIcon.classList.remove('icon-loader');
+          searchIcon.classList.add('icon-lupa');
         });
 
-
-        
       }
     }
   }
@@ -165,29 +181,42 @@
     }
     .search-submit {
       background-color: transparent;
-      background-image: url('assets/img/icon-search.svg');
       background-position: center;
       background-repeat: no-repeat;
-      background-size: 75%;
+      background-size: 90%;
       cursor: pointer;
+      margin-right: .5rem;
       opacity: .5;
       overflow: hidden;
-      padding: 1rem 1.5rem;
+      padding: 1rem 1rem;
       position: absolute;
       right: 0;
       text-indent: -9999em;
       top: 0;
       transition: all .25s ease-out;
     }
-    .search-submit:hover {
+    .search-submit.icon-lupa {
+      background-image: url('assets/img/icon-search.svg');
+    }
+    .search-submit.icon-lupa:hover {
       background-image: url('assets/img/icon-search-hover.svg');
       background-size: 100%;
       opacity: 1;
+    }
+    .search-submit.icon-loader {
+      animation-iteration-count: infinite;
+      animation-name: spin;
+      animation-duration: .5s;
+      background-image: url('assets/img/icon-loader.svg');
     }
 
     .search-input,
     .input-group-result {
       box-shadow: 0px 3px 3px rgba(0,0,0,.15);
+    }
+
+    .search-error {
+      line-height:1.6em;
     }
 
     .input-group-result {
@@ -258,5 +287,15 @@
   }
 
     
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(180deg);
+    }
+  }
+
+
 
 </style>
