@@ -10,7 +10,7 @@
           <div class="">
             <h2 class="list-name">{{info.name}}</h2>
             <div class="list-lastmodified">
-                Atualizado em: <a :href="info.resourceURI" target="_blank">{{info.modified}}</a>
+                Atualizado em: {{info.modified}}
             </div>
             <h4 class="list-description">{{info.description}}</h4>
           </div>

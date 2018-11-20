@@ -7,14 +7,23 @@
         class="search-input"
         placeholder="Procure pelo nome de um herói ou heroína"
         v-on:keyup="changeValue"
-        v-on:blur="showSearchRecomendations = false"
+        v-on:blur="showSearchRecomendations = true"
         >
       <input 
+        :title="tippyTitle"
         type="button" 
         class="search-submit icon-lupa" 
         value="Pesquisar"
         v-on:click="changeValue"
         v-on:blur="showSearchRecomendations = false"
+        v-tippy="{
+            animation: 'scale',
+            arrow: true,
+            arrowType: 'round',
+            duration: 500,
+            delay: 100,
+            size: 'large'
+        }"
         >
     </div>
     <div class="input-group-result" v-if="showSearchRecomendations">
@@ -24,7 +33,22 @@
             <th colspan="2">Pesquisas relacionadas:</th>
           </tr>
         </thead>
-        <tbody v-html="this.templates">
+        <tbody>
+          <tr 
+            v-for="item in infos" 
+            v-on:click="showResult($event)"
+            :data-description="item.description"
+            :data-modified="item.modified"
+            :data-name="item.name"
+            :data-thumbnail="item.thumbnail"
+            >
+            <td>
+              <img :src="item.thumbnail">
+            </td>
+            <td>{{item.name}}</td>
+          </tr>
+          <tr v-html="this.templates">
+          </tr>
         </tbody>
       </table>
     </div>
@@ -32,17 +56,31 @@
 </template>
 
 <script>
+
   export default {
     name: 'Searchform',
     data () {
       return {
+        infos: [],
+        searchIconEl: null,
         searchWords: '',
         showSearchRecomendations: false,
-        infos: [],
-        templates: ''
+        templates: '',
+        tippyTitle: ''
       }
     },
+    mounted () {
+      this.searchIconEl = document.querySelector('.search-submit');
+    },
     methods: {
+      showResult: function($event) {
+        this.$emit('clicked', 'someValue');
+        console.dir($event);
+        // console.dir($event.target);
+        // console.log os valores do personagem clicado
+        // fechar recomendacoes apos clique
+        // passar os valores para o componente pai (app)
+      },
       formatDescription: function (description) {
         if(description == '') return description = "Descrição indisponível";
         return description;
@@ -59,81 +97,91 @@
       getValue: function() {
         this.searchWords = document.querySelector('.search-input').value; 
       },
+      showAlert: function() {
+        this.searchIconEl.classList.remove('icon-lupa');
+        this.searchIconEl.classList.remove('icon-loader');
+        this.searchIconEl.classList.add('icon-alert');
+        this.tippyTitle = 'Insira 3 letras ou mais para realizar a busca';
+      },
+      showLoading: function() {
+        this.searchIconEl.classList.remove('icon-lupa');
+        this.searchIconEl.classList.remove('icon-alert');
+        this.searchIconEl.classList.add('icon-loader');
+        this.tippyTitle = '';
+      },
+      showDefaultState: function() {
+        this.searchIconEl.classList.remove('icon-loader');
+        this.searchIconEl.classList.add('icon-lupa');
+      },
+      showNoResults: function() {
+        this.templates = `
+            <td colspan="2" class="search-noresults">
+              <strong>😭 Nenhum resultado encontrado. Por favor, tente novamente.</strong>
+            </td>
+            <td></td>
+          `;
+        this.showSearchRecomendations = true;
+      },
+      showError: function(error) {
+        this.templates = `
+            <td colspan="2" class="search-error">
+              <strong>😰 Oops! Ocorreu um erro:</strong><br/> ${error}
+            </td>
+            <td></td>
+          `;
+        this.showSearchRecomendations = true;
+      },
       changeValue: function(e) {
         e.preventDefault();
+
         this.getValue();
+
+        if (this.searchWords.length < 3) {
+          this.showAlert();
+          return;
+        }
         this.doSearch();
       },
       doSearch: function() {
 
-        // ao inves de dar return,
-        // informar usuário para escrever no min 3 caracteres
-        if (this.searchWords.length < 3) return;
+        let _self = this,
+            s = {
+                  prefix : 'https://gateway.marvel.com:443/v1/public/characters',
+                  nameStartsWith : 'nameStartsWith='+this.searchWords,
+                  order  : 'orderBy=name',
+                  limit  : 'limit=99'
+                };
 
-        let searchIcon = document.querySelector('.search-submit'); 
-        searchIcon.classList.remove('icon-lupa');
-        searchIcon.classList.add('icon-loader');
+        _self.showLoading();
 
-        let s = {
-          prefix : 'https://gateway.marvel.com:443/v1/public/characters',
-          nameStartsWith : 'nameStartsWith='+this.searchWords,
-          order  : 'orderBy=name',
-          limit  : 'limit=99'
-        }
         this.axios
           .get(s.prefix + '?' + s.nameStartsWith + '&' + s.order + '&' + s.limit + '&' + 'apikey='+publicApiKey)
           .then(response => {
-            this.infos = [];
-            this.templates = '';
+
+            _self.infos = [];
+            _self.templates = '';
+
             var itens = response.data.data.results;
 
-
-            // se itens.length == 0
-            // pula o loop e exibe mensagem: "Nenhum resultado encontrado. Por favor, tente novamente."
-
+            if (itens.length == 0) _self.showNoResults();
 
             for (var item of itens) {
-              this.infos.push({
+              _self.infos.push({
                 name: item.name,
-                description: this.formatDescription(item.description),
+                description: _self.formatDescription(item.description),
                 resourceURI: item.resourceURI,
-                modified: this.formatLastModifiedDate(item.modified),
-                thumbnail: item.thumbnail.path + '.' + item.thumbnail.extension,
-                template: `
-                          <tr>
-                            <td>
-                              <img src="${item.thumbnail.path}.${item.thumbnail.extension}">
-                            </td>
-                            <td>${item.name}</td>
-                          </tr>`
+                modified: _self.formatLastModifiedDate(item.modified),
+                thumbnail: item.thumbnail.path + '.' + item.thumbnail.extension
               });
             }
-            for (var html of this.infos) {
-              this.templates += html.template;
-            }
-            this.showSearchRecomendations = true;
 
-
-            // adicionar evento on click
-            // em todos os itens da tabela
-            // para pegar os detalhes do personagem,
-            // fechar a busca,
-            // escrever em 'list-characters' em app.vue
-
+            _self.showSearchRecomendations = true;
 
           })
         .catch(error => {
-          this.templates = `
-            <tr>
-              <td colspan="2" class="search-error">
-                <strong>😰 Oops! Ocorreu um erro:</strong><br/> ${error}
-              </td>
-              <td></td>
-            </tr>`;
-          this.showSearchRecomendations = true;
+          _self.showError(error);
         }).then(function () {
-          searchIcon.classList.remove('icon-loader');
-          searchIcon.classList.add('icon-lupa');
+          _self.showDefaultState();
         });
 
       }
@@ -200,6 +248,13 @@
     }
     .search-submit.icon-lupa:hover {
       background-image: url('assets/img/icon-search-hover.svg');
+      background-size: 100%;
+      opacity: 1;
+    }
+    .search-submit.icon-alert {
+      background-image: url('assets/img/icon-alert.svg');
+    }
+    .search-submit.icon-alert:hover {
       background-size: 100%;
       opacity: 1;
     }
