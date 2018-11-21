@@ -4,7 +4,7 @@
         <div class="logo">Hero Project</div>
     </div>
     <div class="banner">
-      <Searchform />
+      <Searchform @clicked="onClickChild" />
       <div class="overlay"></div>
       <div class="bg"></div>
     </div>
@@ -12,7 +12,6 @@
 </template>
 
 <script>
-
   import Searchform from './Searchform.vue';
 
   export default {
@@ -23,7 +22,9 @@
       }
     },
     methods: {
-      
+      onClickChild (value) {
+        console.log(value) // someValue
+      }
     },
     components: {
       Searchform

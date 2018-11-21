@@ -75,7 +75,7 @@
     methods: {
       showResult: function($event) {
         this.$emit('clicked', 'someValue');
-        console.dir($event);
+        // console.dir($event);
         // console.dir($event.target);
         // console.log os valores do personagem clicado
         // fechar recomendacoes apos clique

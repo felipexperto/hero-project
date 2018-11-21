@@ -1,5 +1,7 @@
 <template>
   <div id="app">
+    <Mainheader />
+    {{ exibeInfos }}
     <section class="list-section">
       <h1>Detalhes do personagem</h1>
       <ul class="list-characters">
@@ -21,8 +23,7 @@
 </template>
 
 <script>
-
-  import Searchform from './Searchform.vue';
+  import Mainheader from './Mainheader.vue';
 
   export default {
     name: 'app',
@@ -36,10 +37,15 @@
 
     },
     components: {
-      Searchform
+      Mainheader
     },
     beforeCreate () {
 
+    },
+    computed: {
+      exibeInfos: function() {
+        return this.infos;
+      }
     },
     mounted () {
     }
