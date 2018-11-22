@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <Mainheader />
-    {{ exibeInfos }}
     <section class="list-section">
       <h1>Detalhes do personagem</h1>
       <ul class="list-characters">
@@ -43,9 +42,7 @@
 
     },
     computed: {
-      exibeInfos: function() {
-        return this.infos;
-      }
+
     },
     mounted () {
     }

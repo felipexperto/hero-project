@@ -61,6 +61,7 @@
     name: 'Searchform',
     data () {
       return {
+        characterDetails: null,
         infos: [],
         searchIconEl: null,
         searchWords: '',
@@ -74,12 +75,19 @@
     },
     methods: {
       showResult: function($event) {
-        this.$emit('clicked', 'someValue');
-        // console.dir($event);
-        // console.dir($event.target);
-        // console.log os valores do personagem clicado
-        // fechar recomendacoes apos clique
-        // passar os valores para o componente pai (app)
+        let e;
+
+        if ($event.target.tagName == 'TD') e = $event.target.parentNode;
+        if ($event.target.tagName == 'IMG') e = $event.target.parentNode.parentNode;
+
+        this.characterDetails = {
+          description: e.getAttribute('data-description'),
+          modified: e.getAttribute('data-modified'),
+          name: e.getAttribute('data-name'),
+          thumbnail: e.getAttribute('data-thumbnail')
+        }
+
+        console.dir(this.characterDetails);
       },
       formatDescription: function (description) {
         if(description == '') return description = "Descrição indisponível";
@@ -183,7 +191,6 @@
         }).then(function () {
           _self.showDefaultState();
         });
-
       }
     }
   }

@@ -4,7 +4,8 @@
         <div class="logo">Hero Project</div>
     </div>
     <div class="banner">
-      <Searchform @clicked="onClickChild" />
+        {{ exibeInfos }}
+      <Searchform  />
       <div class="overlay"></div>
       <div class="bg"></div>
     </div>
@@ -22,9 +23,10 @@
       }
     },
     methods: {
-      onClickChild (value) {
-        console.log(value) // someValue
-      }
+      
+    },
+    computed: {
+
     },
     components: {
       Searchform
