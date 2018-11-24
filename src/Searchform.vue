@@ -11,6 +11,7 @@
         v-on:blur="showSearchRecomendations = true"
         >
       <input 
+        :data-original-title="tippyTitle"
         :title="tippyTitle"
         type="button" 
         class="search-submit icon-lupa" 
@@ -57,8 +58,6 @@
   </form>
 </template>
 
-<!-- v-on:click.stop.prevent="showResult($event)" -->
-
 <script>
 
   import { bus } from './main';
@@ -73,7 +72,7 @@
         searchWords: '',
         showSearchRecomendations: false,
         templates: '',
-        tippyTitle: ''
+        tippyTitle: null
       }
     },
     mounted () {
@@ -124,7 +123,7 @@
         this.searchIconEl.classList.remove('icon-lupa');
         this.searchIconEl.classList.remove('icon-alert');
         this.searchIconEl.classList.add('icon-loader');
-        this.tippyTitle = '';
+        this.tippyTitle = null;
       },
       showDefaultState: function() {
         this.searchIconEl.classList.remove('icon-loader');
@@ -169,7 +168,9 @@
                   limit  : 'limit=99'
                 };
 
+        console.log(this.tippyTitle);
         _self.showLoading();
+        console.log(this.tippyTitle);
 
         this.axios
           .get(s.prefix + '?' + s.nameStartsWith + '&' + s.order + '&' + s.limit + '&' + 'apikey='+publicApiKey)
@@ -365,7 +366,6 @@
     }
   }
 
-    
   @keyframes spin {
     from {
       transform: rotate(0deg);
@@ -374,7 +374,5 @@
       transform: rotate(180deg);
     }
   }
-
-
 
 </style>

@@ -18,12 +18,14 @@
         </li>
       </ul>
     </section>
+    <Chatbox />
   </div>
 </template>
 
 <script>
   import { bus } from './main';
   import Mainheader from './Mainheader.vue';
+  import Chatbox from './Chatbox.vue';
 
   export default {
     name: 'app',
@@ -33,19 +35,9 @@
         infos: []
       }
     },
-    methods: {
-
-    },
     components: {
-      Mainheader
-    },
-    beforeCreate () {
-
-    },
-    computed: {
-
-    },
-    mounted () {
+      Mainheader,
+      Chatbox
     },
     created() {
 
@@ -53,16 +45,6 @@
 
       bus.$on('sendCharacterData', function(obj) {
         
-        /*console.group();
-          console.dir(obj.description);
-          console.dir(obj.modified);
-          console.dir(obj.name);
-          console.dir(obj.thumbnail);
-        console.groupEnd();*/
-
-        /*console.log(this);
-        console.log(this.data);*/
-
         _self.infos = [];
         _self.infos.push({
           description: obj.description, 

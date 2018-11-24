@@ -16,32 +16,14 @@
 
   export default {
     name: 'main-header',
-    data () {
-      return {
-        
-      }
-    },
-    methods: {
-
-    },
-    computed: {
-
-    },
     components: {
       Searchform
-    },
-    beforeCreate () {
-
-    },
-    mounted () { 
-
     }
   }
 </script>
 
 <style lang="scss">
 
-  // variables
   $white: rgb(255,255,255);
   $red-darker: rgb(205, 49, 27);
 
@@ -106,9 +88,5 @@
     }
 
   }
-
-
-
-
 
 </style>
