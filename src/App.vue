@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Mainheader />
-    <section class="list-section">
+    <section class="list-section" v-show="infos.length > 0">
       <h1>Detalhes do personagem</h1>
       <ul class="list-characters">
         <li v-for="info of infos" class="item"> 
@@ -22,6 +22,7 @@
 </template>
 
 <script>
+  import { bus } from './main';
   import Mainheader from './Mainheader.vue';
 
   export default {
@@ -45,6 +46,32 @@
 
     },
     mounted () {
+    },
+    created() {
+
+      var _self = this;
+
+      bus.$on('sendCharacterData', function(obj) {
+        
+        /*console.group();
+          console.dir(obj.description);
+          console.dir(obj.modified);
+          console.dir(obj.name);
+          console.dir(obj.thumbnail);
+        console.groupEnd();*/
+
+        /*console.log(this);
+        console.log(this.data);*/
+
+        _self.infos = [];
+        _self.infos.push({
+          description: obj.description, 
+          modified: obj.modified, 
+          name: obj.name, 
+          thumbnail: obj.thumbnail
+        });
+
+      });
     }
   }
 </script>

@@ -5,7 +5,8 @@
       <input 
         type="text"   
         class="search-input"
-        placeholder="Procure pelo nome de um herói ou heroína"
+        placeholder="Procure pelo nome de um herói ou heroína em inglês"
+        v-on:click="changeValue"
         v-on:keyup="changeValue"
         v-on:blur="showSearchRecomendations = true"
         >
@@ -36,7 +37,7 @@
         <tbody>
           <tr 
             v-for="item in infos" 
-            v-on:click="showResult($event)"
+            v-on:click.stop.prevent="showResult"
             :data-description="item.description"
             :data-modified="item.modified"
             :data-name="item.name"
@@ -52,10 +53,15 @@
         </tbody>
       </table>
     </div>
+    <h2>São mais de 1000 personagens em diversos universos.</h2>
   </form>
 </template>
 
+<!-- v-on:click.stop.prevent="showResult($event)" -->
+
 <script>
+
+  import { bus } from './main';
 
   export default {
     name: 'Searchform',
@@ -87,7 +93,10 @@
           thumbnail: e.getAttribute('data-thumbnail')
         }
 
-        console.dir(this.characterDetails);
+        bus.$emit('sendCharacterData', this.characterDetails);
+
+        this.showSearchRecomendations = false;
+
       },
       formatDescription: function (description) {
         if(description == '') return description = "Descrição indisponível";
@@ -203,6 +212,11 @@
       font-weight: 400;
       font-size: 1.75rem;
     }
+    h2 {
+      font-weight: 100;
+      margin-top: 10px;
+      font-size: 1rem;
+    }
   }
 
   .form-search {
@@ -288,8 +302,11 @@
       max-height: 300px;
       overflow-x: hidden;
       overflow-y: scroll;
+      position: absolute;
       text-align: left;
       transform: translateY(-5px);
+      width: 100%;
+
 
       &::-webkit-scrollbar {
           width: 12px;

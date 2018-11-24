@@ -9,6 +9,8 @@ import './assets/scss/core.scss';
 Vue.use(VueAxios, axios)
 Vue.use(VueTippy)
 
+export const bus = new Vue();
+
 new Vue({
   el: '#app',
   render: h => h(App)

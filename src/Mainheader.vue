@@ -4,8 +4,7 @@
         <div class="logo">Hero Project</div>
     </div>
     <div class="banner">
-        {{ exibeInfos }}
-      <Searchform  />
+      <Searchform />
       <div class="overlay"></div>
       <div class="bg"></div>
     </div>
@@ -23,7 +22,7 @@
       }
     },
     methods: {
-      
+
     },
     computed: {
 
@@ -46,23 +45,18 @@
   $white: rgb(255,255,255);
   $red-darker: rgb(205, 49, 27);
 
-  // mixins
-  @mixin menu-background ($alpha) {
-    background-color: rgba($red-darker, $alpha);
-  }
-
   #main-header {
     color: #fff;
 
     .topbar {
-      @include menu-background(1);
+      background-color: #fff;
       padding: 1rem 2rem;
       position: relative;
       width: 100%;
       z-index: 2;
 
       &:before {
-        @include menu-background(1);
+        background-color: #fff;
         bottom: 0;
         box-shadow: 0px 10px 12px 0px rgba(170, 30, 10, 1);
         content: " ";
@@ -75,6 +69,8 @@
       }
 
       .logo {
+        color: $red-darker;
+        font-size: 1.25rem;
         font-weight: 900;
         text-align: center;
         text-transform: uppercase;
@@ -83,7 +79,7 @@
     }
 
     .banner {
-      padding-top: 30%;
+      padding-top: 25%;
       position: relative;
       width: 100%;
     
@@ -97,7 +93,7 @@
       }
 
       .overlay {
-        @include menu-background(.9);
+        background-color: rgba($red-darker, .9);
         z-index: 1;
       }
 
