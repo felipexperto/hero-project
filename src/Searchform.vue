@@ -8,7 +8,7 @@
         placeholder="Procure pelo nome de um herói ou heroína em inglês"
         v-on:click="changeValue"
         v-on:keyup="changeValue"
-        v-on:blur="showSearchRecomendations = true"
+        v-on:blur="inputBlur"
         >
       <input 
         :data-original-title="tippyTitle"
@@ -69,6 +69,7 @@
         characterDetails: null,
         infos: [],
         searchIconEl: null,
+        searchInputEl: null,
         searchWords: '',
         showSearchRecomendations: false,
         templates: '',
@@ -76,7 +77,8 @@
       }
     },
     mounted () {
-      this.searchIconEl = document.querySelector('.search-submit');
+      this.searchIconEl  = document.querySelector('.search-submit');
+      this.searchInputEl = document.querySelector('.search-input');
     },
     methods: {
       showResult: function($event) {
@@ -94,8 +96,12 @@
 
         bus.$emit('sendCharacterData', this.characterDetails);
 
-        this.showSearchRecomendations = false;
+        this.scrollTo('#section-character-info');
 
+        this.showSearchRecomendations = false;
+      },
+      scrollTo(element) {
+        this.$scrollTo(element, 500, { onStart: this.myMethod });
       },
       formatDescription: function (description) {
         if(description == '') return description = "Descrição indisponível";
@@ -112,6 +118,12 @@
       },
       getValue: function() {
         this.searchWords = document.querySelector('.search-input').value; 
+      },
+      inputBlur: function() {
+        if (this.searchInputEl.value.length == 0) {
+          this.showSearchRecomendations = false;
+          bus.$emit('resetCharacterData', true);
+        }
       },
       showAlert: function() {
         this.searchIconEl.classList.remove('icon-lupa');
@@ -168,9 +180,7 @@
                   limit  : 'limit=99'
                 };
 
-        console.log(this.tippyTitle);
         _self.showLoading();
-        console.log(this.tippyTitle);
 
         this.axios
           .get(s.prefix + '?' + s.nameStartsWith + '&' + s.order + '&' + s.limit + '&' + 'apikey='+publicApiKey)
@@ -211,7 +221,14 @@
   #main-header {
     h1 {
       font-weight: 400;
-      font-size: 1.75rem;
+      font-size: 1.25rem;
+      
+      @media (min-width: 576px) {
+        font-size: 1.5rem;
+      }
+      @media (min-width: 768px) {
+        font-size: 1.75rem;
+      }
     }
     h2 {
       font-weight: 100;
@@ -223,16 +240,34 @@
   .form-search {
     bottom: 0;
     left: 0;
-    position: absolute;
-    right: 0;
-    top: 0;
     margin: auto;
-    text-align: center;
-    width: 600px;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    position: absolute;
     max-width: 100%;
+    right: 0;
+    text-align: center;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translateY(-65%);
+    width: 600px;
     z-index: 2;
+
+    @media (min-width: 576px) {
+      padding-left: 1rem;
+      padding-right: 1rem;
+      transform: translateY(-60%);
+    }
+    @media (min-width: 768px) {
+      padding-left: 0;
+      padding-right: 0;
+      transform: translateY(-60%);
+    }
+    @media (min-width: 992px) {
+      transform: translateY(-60%);
+    }
+    @media (min-width: 1200px) {
+      transform: translateY(-60%);
+    }
 
     .input-group {
       position: relative;

@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Mainheader />
-    <section class="list-section" v-show="infos.length > 0">
+    <section id="section-character-info" class="list-section" v-show="infos.length > 0">
       <h1>Detalhes do personagem</h1>
       <ul class="list-characters">
         <li v-for="info of infos" class="item"> 
@@ -53,6 +53,10 @@
           thumbnail: obj.thumbnail
         });
 
+      });
+
+      bus.$on('resetCharacterData', function(obj) {
+        if (obj) _self.infos = [];
       });
     }
   }

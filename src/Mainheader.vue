@@ -61,9 +61,22 @@
     }
 
     .banner {
-      padding-top: 25%;
+      padding-top: 75%;
       position: relative;
       width: 100%;
+
+      @media (min-width: 576px) {
+        padding-top: 45%;
+      }
+      @media (min-width: 768px) {
+        padding-top: 35%;
+      }
+      @media (min-width: 992px) {
+        padding-top: 35%;
+      }
+      @media (min-width: 1200px) {
+        padding-top: 25%;
+      }
     
      .overlay,
      .bg {
