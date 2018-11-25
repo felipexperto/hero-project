@@ -122,7 +122,6 @@
       inputBlur: function() {
         if (this.searchInputEl.value.length == 0) {
           this.showSearchRecomendations = false;
-          bus.$emit('resetCharacterData', true);
         }
       },
       showAlert: function() {

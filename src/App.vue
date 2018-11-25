@@ -54,10 +54,6 @@
         });
 
       });
-
-      bus.$on('resetCharacterData', function(obj) {
-        if (obj) _self.infos = [];
-      });
     }
   }
 </script>
