@@ -18,6 +18,18 @@
         </li>
       </ul>
     </section>
+    <section class="list-section" v-show="infos.length == 0">
+      <div class="empty-state">
+        <img src="./assets/img/search-emptystate.svg" alt="">
+        <h2>
+          Hmm...
+        </h2>
+        <h3>
+          Ainda não recebemos nenhum sinal<br>
+          do universo Marvel. Faça uma busca.
+        </h3>
+      </div>
+    </section>
     <Chatbox />
   </div>
 </template>
@@ -72,18 +84,27 @@
     max-width: 1170px;
     padding: 40px 0;
 
-    h1 {
+    h1, h2, h3 {
       color: rgba(0,0,0,.7);
+    }
+
+    h1 {
+      
       font-weight: 900;
       margin-left: 1.5rem;
       text-transform: uppercase;
     }
 
     h2 {
-      color: rgba(0,0,0,.7);
       font-weight: 800;
       margin-top: 0;
       margin-bottom: .15rem;
+    }
+
+    h3 {
+      font-weight: 800;
+      margin-top: 0;
+      margin-bottom: 0;
     }
 
     h4 {
@@ -91,6 +112,22 @@
       font-weight: normal;
       line-height: 1.6em;
       margin-bottom: 0;
+    }
+
+    .empty-state {
+      color: rgba(0,0,0,.7);
+      text-align: center;
+
+      h3 {
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 1.4em;
+      }
+
+      img {
+        max-width: 100%;
+        width: 300px;
+      }
     }
 
   }
