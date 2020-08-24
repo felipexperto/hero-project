@@ -181,9 +181,6 @@
 
         _self.showLoading();
 
-        console.log(process.env.NODE_ENV);
-        console.log(process.env.VUE_APP_MARVEL_API);
-
         this.axios
           .get(s.prefix + '?' + s.nameStartsWith + '&' + s.order + '&' + s.limit + '&' + 'apikey='+process.env.VUE_APP_MARVEL_API)
           .then(response => {
