@@ -1,1 +1,0 @@
-var publicApiKey = '5065baf14bbf76f39af922ee105601c9';

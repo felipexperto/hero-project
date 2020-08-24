@@ -181,18 +181,21 @@
 
         _self.showLoading();
 
+        console.log(process.env.NODE_ENV);
+        console.log(process.env.VUE_APP_MARVEL_API);
+
         this.axios
-          .get(s.prefix + '?' + s.nameStartsWith + '&' + s.order + '&' + s.limit + '&' + 'apikey='+publicApiKey)
+          .get(s.prefix + '?' + s.nameStartsWith + '&' + s.order + '&' + s.limit + '&' + 'apikey='+process.env.VUE_APP_MARVEL_API)
           .then(response => {
 
             _self.infos = [];
             _self.templates = '';
 
-            var itens = response.data.data.results;
+            const itens = response.data.data.results;
 
             if (itens.length == 0) _self.showNoResults();
 
-            for (var item of itens) {
+            for (const item of itens) {
               _self.infos.push({
                 name: item.name,
                 description: _self.formatDescription(item.description),
