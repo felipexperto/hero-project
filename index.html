@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hero Project</title>
 
-    <script type="text/javascript" src="./src/assets/js/api/public-api-key.js"></script>
     <!-- 
       trocar este script por um modal que abre solicitando public key,
       gravar valor no localstorage,
@@ -14,11 +13,7 @@
 
   </head>
   <body>
-
-    <div 
-    	id="app"
-    	:publicApiKey=" {{ $publicApiKey }}"></div>
-
+    <div id="app"></div>
     <script src="/dist/build.js"></script>
   </body>
 </html>

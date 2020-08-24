@@ -1,5 +1,5 @@
-var path = require('path')
-var webpack = require('webpack')
+const path = require('path')
+const webpack = require('webpack')
 
 module.exports = {
   entry: './src/main.js',
@@ -87,12 +87,13 @@ module.exports = {
 }
 
 if (process.env.NODE_ENV === 'production') {
+  const { VUE_APP_MARVEL_API } = require('./config/prod.env.js')
   module.exports.devtool = '#source-map'
-  // http://vue-loader.vuejs.org/en/workflow/production.html
   module.exports.plugins = (module.exports.plugins || []).concat([
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: '"production"'
+        NODE_ENV: '"production"',
+        VUE_APP_MARVEL_API,
       }
     }),
     new webpack.optimize.UglifyJsPlugin({
@@ -103,6 +104,19 @@ if (process.env.NODE_ENV === 'production') {
     }),
     new webpack.LoaderOptionsPlugin({
       minimize: true
+    })
+  ])
+}
+
+if (process.env.NODE_ENV === 'development') {
+  const { VUE_APP_MARVEL_API } = require('./config/dev.env.js')
+  module.exports.devtool = '#source-map'
+  module.exports.plugins = (module.exports.plugins || []).concat([
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: '"development"',
+        VUE_APP_MARVEL_API,
+      }
     })
   ])
 }
